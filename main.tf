@@ -1,27 +1,24 @@
 terraform {
   required_providers {
     docker = {
-      source  = "teena_23/docker"
-      version = "~> 3.0.1"
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0.2"
     }
   }
 }
 
-provider "docker" {
-  host    = "npipe:////.//pipe//docker_engine"
-}
+provider "docker" {}
 
 resource "docker_image" "nginx" {
-  name         = "nginx"
+  name         = "nginx:latest"
   keep_locally = false
 }
 
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.image_id
-  name  = "tutorial"
-
+resource "docker_container" "nginx_server" {
+  name  = "terraform-nginx"
+  image = docker_image.nginx.latest
   ports {
     internal = 80
-    external = 8000
+    external = 8080
   }
 }
